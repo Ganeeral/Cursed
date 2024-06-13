@@ -10,8 +10,80 @@ import {
 } from "@/ui/icons";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Image from "next/image";
 
-const page = () => {
+interface User {
+  login: string;
+  photo: string;
+}
+
+const Page = () => {
+
+  const [user, setUser] = useState<User | null>(null);
+  const [newName, setNewName] = useState<string>("");
+  const [newPhoto, setNewPhoto] = useState<string>("");
+
+
+  useEffect(() => {
+    async function fetchUserDetails() {
+      const userId = localStorage.getItem("user_id");
+      if (!userId) {
+        console.error("Пользователь не авторизован");
+        return;
+      }
+      try {
+        const response = await axios.post(
+          "http://Cursed/src/api/getUserDetails.php",
+          { user_id: userId }
+        );
+        if (response.data && !response.data.message) {
+          setUser(response.data);
+          setNewName(response.data.name);
+          setNewPhoto(response.data.photo);
+        } else {
+          console.error("Пользователь не найден");
+        }
+      } catch (error) {
+        console.error("Ошибка получения данных о пользователе:", error);
+      }
+    }
+
+    fetchUserDetails();
+  }, []);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSave = async () => {
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      console.error("Пользователь не авторизован");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://Cursed/src/api/updateUserDetails.php",
+        { user_id: userId, login: newName, photo: newPhoto }
+      );
+      if (response.data && !response.data.error) {
+        setUser({ login: newName, photo: newPhoto });
+      } else {
+        console.error("Ошибка обновления данных пользователя");
+      }
+    } catch (error) {
+      console.error("Ошибка обновления данных пользователя:", error);
+    }
+  };
+
   return (
     <>
       <HeaderCursed />
@@ -19,18 +91,40 @@ const page = () => {
         <div className="relative">
           <div className="flex relative cursor-pointer z-10 justify-center items-end">
             <BorderAvatarIcon className="z-10" />
-            <UserAvatarIcon className="absolute" />
+            {user && (
+              <Image
+                src={newPhoto || user.photo}
+                alt="User Avatar"
+                className="absolute w-full h-full object-cover max-w-[200px] max-h-[200px]"
+                width={100}
+                height={100}
+              />
+            )}
             <input
               type="file"
               accept="image/*"
               id="fileUpload"
               className="absolute inset-0 z-20 opacity-0 w-full h-full cursor-pointer"
+              onChange={handleFileChange}
             />
           </div>
           <ClickIcon className="absolute hidden mobile:block top-[-7rem] right-[-7rem]" />
-          <p className="font-semibold text-yellow-cream text-3xl text-center">
-            user
-          </p>
+          <input
+            type="text"
+            value={user?.login || newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="font-semibold text-yellow-cream text-3xl text-center bg-transparent border-none outline-none"
+          />
+          <button
+            onClick={handleSave}
+            className="z-20 w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto mt-10 btn-background cursor-pointer"
+          >
+            <div className="flex justify-center items-center h-full">
+              <p className="font-bold text-xl uppercase text-yellow-cream">
+                Сохранить
+              </p>
+            </div>
+          </button>
           <div className="z-20 w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto mt-10">
             <Link href="/" className="btn-background cursor-pointer">
               <div className="flex justify-center items-center h-full">
@@ -41,11 +135,10 @@ const page = () => {
             </Link>
           </div>
         </div>
-        {/* <DecorIcon className="absolute right-0 max-w-[700px]" /> */}
       </div>
       <Footer />
     </>
   );
 };
 
-export default page;
+export default Page;

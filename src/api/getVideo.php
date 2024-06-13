@@ -7,7 +7,7 @@ header("Content-Type: application/json");
 $servername = "localhost";
 $username = "root";
 $password = ""; 
-$dbname = "db_flixx"; 
+$dbname = "stickers_db"; 
 
 $mysqli = new mysqli($servername, $username, $password, $dbname);
 
@@ -17,17 +17,7 @@ if ($mysqli->connect_error) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = $mysqli->real_escape_string($_GET['id']);
-    $query = "
-        SELECT 
-            Videos.*, 
-            Users.id AS author_id, 
-            Users.username AS author, 
-            Users.author_avatar AS author_avatar,
-            Users.subscribers AS subscribers
-        FROM Videos 
-        LEFT JOIN Users ON Videos.author = Users.id 
-        WHERE Videos.id = $id
-    ";
+    $query = "SELECT * FROM Stickers WHERE id = $id";
     $result = $mysqli->query($query);
 
     if ($result) {

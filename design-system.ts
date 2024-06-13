@@ -35,6 +35,7 @@ export const indents = {
 };
 
 export const colors = {
+  'fire-red':'#A70A12',
   'beige-cream': '#BAA891',
   'yellow-cream': '#FAD77C',
   "background-main": "#030708",

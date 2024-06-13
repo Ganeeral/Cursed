@@ -68,6 +68,10 @@ import BorderAvatarIcon from "@/ui/icons/BorderAvatarIcon.svg";
 import UserAvatarIcon from "@/ui/icons/UserAvatarIcon.svg";
 import ClickIcon from "@/ui/icons/ClickIcon.svg";
 import BasketIcon from "@/ui/icons/BasketIcon.svg";
+import AuthIcon from "@/ui/icons/AuthIcon.svg";
+import UploadCreamIcon from "@/ui/icons/UploadCreamIcon.svg";
+import AddIcon from "@/ui/icons/AddIcon.svg";
+import RedactIcon from "@/ui/icons/RedactIcon.svg";
 
 export {
   BurgerIcon,
@@ -140,4 +144,8 @@ export {
   UserAvatarIcon,
   ClickIcon,
   BasketIcon,
+  AuthIcon,
+  UploadCreamIcon,
+  RedactIcon,
+  AddIcon,
 };

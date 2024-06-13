@@ -22,6 +22,7 @@ import BannerCursed from "@/components/BannerCursed/BannerCursed";
 import { motion, useScroll, useTransform } from "framer-motion";
 import CursedIntroduction from "@/sections/CursedIntroduction/CursedIntroduction";
 import Footer from "@/components/footer/footer";
+import axios from "axios";
 
 const imageData = [
   {
@@ -68,7 +69,24 @@ const imageData = [
   },
 ];
 
+interface Sticker {
+  id: number;
+  name: string;
+  photo: string;
+}
+
 const App = () => {
+  const [sticker, setSticker] = useState<Sticker[]>([]);
+
+  useEffect(() => {
+    axios
+      .get("http://Cursed/src/api/getVideos.php")
+      .then((response) => {
+        setSticker(response.data);
+      })
+      .catch((error) => console.error("Ошибка при загрузке стикеров:", error));
+  }, []);
+
   const { scrollY } = useScroll();
 
   const opacity = useTransform(scrollY, [0, 1000], [1, 0]);
@@ -198,114 +216,36 @@ const App = () => {
         </div>
         <div className="container-main">
           <div className="mt-40 justify-center flex place-items-center gap-x-16 gap-y-10 flex-wrap">
-            <div className="flex flex-col gap-y-2">
-              <p className="text-yellow-cream font-black text-2xl">
-                Огненный взор
-              </p>
-              <div className="relative flex justify-center items-center">
-                <BorderIcon className="w-full h-full" />
-                <Sticker1Icon className="absolute" />
+            {sticker.map((sticker: Sticker) => (
+              <div key={sticker.id} className="flex flex-col gap-y-2">
+                <p className="text-yellow-cream font-black text-2xl">
+                  {sticker.name}
+                </p>
+                <div className="relative flex justify-center items-center">
+                  <BorderIcon className="w-full h-full" />
+                  <Image
+                    className="absolute"
+                    src={sticker.photo}
+                    alt={sticker.name}
+                    width={380}
+                    height={348}
+                  />
+                </div>
+                <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
+                  <a
+                    href={sticker.photo}
+                    download
+                    className="btn-background cursor-pointer z-[99]"
+                  >
+                    <div className="flex justify-center items-center h-full z-[99]">
+                      <p className="font-bold text-xl uppercase text-yellow-cream">
+                        Скачать!
+                      </p>
+                    </div>
+                  </a>
+                </div>
               </div>
-              <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
-                <Link href="/" className="btn-background cursor-pointer z-[99]">
-                  <div className="flex justify-center items-center h-full z-[99]">
-                    <p className="font-bold text-xl uppercase text-yellow-cream">
-                      Скачать!
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <p className="text-yellow-cream font-black text-2xl">
-                Огненный взор
-              </p>
-              <div className="relative flex justify-center items-center">
-                <BorderIcon className="w-full h-full" />
-                <Sticker1Icon className="absolute" />
-              </div>
-              <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
-                <Link href="/" className="btn-background cursor-pointer z-[99]">
-                  <div className="flex justify-center items-center h-full z-[99]">
-                    <p className="font-bold text-xl uppercase text-yellow-cream">
-                      Скачать!
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <p className="text-yellow-cream font-black text-2xl">
-                Огненный взор
-              </p>
-              <div className="relative flex justify-center items-center">
-                <BorderIcon className="w-full h-full" />
-                <Sticker1Icon className="absolute" />
-              </div>
-              <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
-                <Link href="/" className="btn-background cursor-pointer z-[99]">
-                  <div className="flex justify-center items-center h-full z-[99]">
-                    <p className="font-bold text-xl uppercase text-yellow-cream">
-                      Скачать!
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <p className="text-yellow-cream font-black text-2xl">
-                Огненный взор
-              </p>
-              <div className="relative flex justify-center items-center">
-                <BorderIcon className="w-full h-full" />
-                <Sticker1Icon className="absolute" />
-              </div>
-              <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
-                <Link href="/" className="btn-background cursor-pointer z-[99]">
-                  <div className="flex justify-center items-center h-full z-[99]">
-                    <p className="font-bold text-xl uppercase text-yellow-cream">
-                      Скачать!
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <p className="text-yellow-cream font-black text-2xl">
-                Огненный взор
-              </p>
-              <div className="relative flex justify-center items-center">
-                <BorderIcon className="w-full h-full" />
-                <Sticker1Icon className="absolute" />
-              </div>
-              <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
-                <Link href="/" className="btn-background cursor-pointer z-[99]">
-                  <div className="flex justify-center items-center h-full z-[99]">
-                    <p className="font-bold text-xl uppercase text-yellow-cream">
-                      Скачать!
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-2">
-              <p className="text-yellow-cream font-black text-2xl">
-                Огненный взор
-              </p>
-              <div className="relative flex justify-center items-center">
-                <BorderIcon className="w-full h-full" />
-                <Sticker1Icon className="absolute" />
-              </div>
-              <div className="z-20 max-w-[613px] w-full relative flex flex-col justify-center items-center gap-y-6 mx-auto">
-                <Link href="/" className="btn-background cursor-pointer z-[99]">
-                  <div className="flex justify-center items-center h-full z-[99]">
-                    <p className="font-bold text-xl uppercase text-yellow-cream">
-                      Скачать!
-                    </p>
-                  </div>
-                </Link>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

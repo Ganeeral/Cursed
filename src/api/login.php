@@ -15,7 +15,7 @@ if (empty($login) || empty($password)) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT id, role, status, password FROM users WHERE login = ?");
+$stmt = $conn->prepare("SELECT id, role, password FROM users WHERE login = ?");
 $stmt->bind_param("s", $login);
 $stmt->execute();
 $stmt->store_result();
@@ -27,11 +27,11 @@ if ($stmt->num_rows === 0) {
     exit();
 }
 
-$stmt->bind_result($user_id, $role, $status, $hashed_password);
+$stmt->bind_result($user_id, $role, $hashed_password);
 $stmt->fetch();
 
 if (password_verify($password, $hashed_password)) {
-    echo json_encode(['message' => 'Вход выполнен успешно', 'user_id' => $user_id, 'role' => $role, 'status' => $status]);
+    echo json_encode(['message' => 'Вход выполнен успешно', 'user_id' => $user_id, 'role' => $role]);
 } else {
     echo json_encode(['message' => 'Неверный логин или пароль']);
 }

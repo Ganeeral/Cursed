@@ -6,6 +6,7 @@ import {
   BasketIcon,
   BorderAvatarIcon,
   ClickIcon,
+  DecorIcon,
   UserAvatarIcon,
 } from "@/ui/icons";
 import Link from "next/link";
@@ -18,52 +19,11 @@ interface User {
   photo: string;
 }
 
-interface Sticker {
-  id: number;
-  name: string;
-  photo: string;
-}
-
 const Page = () => {
   const [user, setUser] = useState<User | null>(null);
   const [newName, setNewName] = useState<string>("");
   const [newPhoto, setNewPhoto] = useState<string>("");
-  const [stickers, setSticker] = useState<Sticker[]>([]);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const handleDelete = async (stickerId: number) => {
-    const confirmed = window.confirm(
-      "Вы уверены, что хотите удалить этот стикер?"
-    );
-    if (confirmed) {
-      try {
-        const response = await axios.post(
-          "http://Cursed/src/api/deleteSticker.php",
-          {
-            sticker_id: stickerId,
-          }
-        );
-        if (response.data && !response.data.error) {
-          setSticker(stickers.filter((sticker) => sticker.id !== stickerId));
-          setShowSuccessMessage(true);
-          setTimeout(() => setShowSuccessMessage(false), 3000);
-        } else {
-          console.error("Ошибка при удалении стикера:", response.data.error);
-        }
-      } catch (error) {
-        console.error("Ошибка при удалении стикера:", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    axios
-      .get("http://Cursed/src/api/getVideos.php")
-      .then((response) => {
-        setSticker(response.data);
-      })
-      .catch((error) => console.error("Ошибка при загрузке стикеров:", error));
-  }, []);
 
   useEffect(() => {
     async function fetchUserDetails() {
@@ -179,51 +139,27 @@ const Page = () => {
       <div className="container-main">
         <div className="flex justify-between px-20 items-center w-full mt-28">
           <div className="flex gap-x-4">
-            <Link
-              href="/admin"
-              className="text-yellow-cream font-semibold text-3xl underline underline-offset-4"
-            >
-              Стикеры
-            </Link>
-            <Link
-              href="/admin/users"
-              className="text-yellow-cream font-semibold text-3xl"
-            >
-              пользователи
-            </Link>
+            <Link href="/admin" className="text-yellow-cream font-semibold text-3xl">Стикеры</Link>
+            <Link href="/admin/users" className="text-yellow-cream font-semibold text-3xl  underline underline-offset-4">пользователи</Link>
           </div>
-          <Link href="/admin/add" className="text-6xl text-[#AB2A32]">
-            +
-          </Link>
         </div>
-        <div className="w-full flex flex-col gap-y-4 mt-16 p-11 bg-[#020506] rounded-3xl">
-          {stickers.map((sticker: Sticker) => (
-            <div
-              key={sticker.id}
-              className="w-full bg-[#030708] rounded-xl p-9 flex justify-between items-center"
-            >
-              <div className="flex gap-6 items-center">
-                <span className="font-semibold text-yellow-cream text-3xl">
-                  {sticker.id}
-                </span>
-                <p className="font-semibold line-clamp-1 overflow-hidden text-yellow-cream text-2xl">
-                  {sticker.name}
-                </p>
-              </div>
-
-              <div className="flex gap-x-3 items-center">
-                <Link
-                  href={`/admin/redact/${sticker.id}`}
-                  className="font-semibold text-yellow-cream text-xl"
-                >
-                  Редактировать
-                </Link>
-                <button onClick={() => handleDelete(sticker.id)}>
-                  <BasketIcon />
-                </button>
-              </div>
+        <div className="w-full mt-16 p-11 bg-[#020506] rounded-3xl">
+          <div className="w-full bg-[#030708] rounded-xl p-9 flex justify-between items-center">
+            <div className="flex gap-6 items-center">
+              <span className="font-semibold text-yellow-cream text-3xl">
+                1
+              </span>
+              <p className="font-semibold line-clamp-1 overflow-hidden text-yellow-cream text-2xl">
+                Огненный взор
+              </p>
             </div>
-          ))}
+
+            <div className="flex gap-x-3 items-center">
+              <Link href="" className="font-semibold text-yellow-cream text-xl">
+                Заблокировать
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />

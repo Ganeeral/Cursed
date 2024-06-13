@@ -11,7 +11,6 @@ $login = $data['login'];
 $password = $data['password'];
 $repeatPassword = $data['repeatPassword'];
 $author_avatar = '/images/user.png';
-$preview = '/images/business-8265025.jpg';
 
 if (empty($login) || empty($password)) {
     echo json_encode(['message' => 'Все поля обязательны для заполнения']);
@@ -35,23 +34,12 @@ if ($stmt->num_rows > 0) {
     exit();
 }
 
-
-$stmt->close();
-
-$stmt = $conn->prepare("SELECT MAX(CAST(SUBSTRING(username, 6) AS UNSIGNED)) AS max_guest_num FROM users WHERE username LIKE 'гость %'");
-$stmt->execute();
-$result = $stmt->get_result();
-$row = $result->fetch_assoc();
-$max_guest_num = $row['max_guest_num'] ?? 0;
-$new_guest_num = $max_guest_num + 1;
-$username = "гость " . $new_guest_num;
-
 $stmt->close();
 
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-$stmt = $conn->prepare("INSERT INTO users (login, password, username, author_avatar, preview) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $login, $hashed_password, $username, $author_avatar, $preview);
+$stmt = $conn->prepare("INSERT INTO users (login, password, photo) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $login, $hashed_password, $author_avatar);
 
 if ($stmt->execute()) {
     echo json_encode(['message' => 'Регистрация успешна']);

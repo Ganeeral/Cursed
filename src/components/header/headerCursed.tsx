@@ -21,7 +21,7 @@ const HeaderCursed = () => {
           </Link>
           <Link
             className="text-white text-xl  transition-all duration-300 font-bold relative nav-hover"
-            href="#"
+            href="/user"
           >
             <p className="nav-link transition-all duration-300">Профиль</p>
             <div className="nav-hover-link transition-all duration-300"></div>

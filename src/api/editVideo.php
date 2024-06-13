@@ -4,43 +4,39 @@ header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "db_flixx";
+include('connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
-    $title = $_POST['title'];
-    $description = $_POST['description'];
+    $name = $_POST['name'];
     $previewDir = "../../public/images/";
-    $preview ="";
+    $photo = "";
 
-    if (isset($_FILES['preview'])) {
-        $preview_tmp = $_FILES['preview']['tmp_name'];
-        $preview = '/images/' . basename($_FILES['preview']['name']);
-        move_uploaded_file($preview_tmp, $previewDir . basename($_FILES['preview']['name']));
+    if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+        $photo_tmp = $_FILES['photo']['tmp_name'];
+        $photo = '/images/' . basename($_FILES['photo']['name']);
+        move_uploaded_file($photo_tmp, $previewDir . basename($_FILES['photo']['name']));
     }
+
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     if ($conn->connect_error) {
         die('Ошибка подключения к базе данных: ' . $conn->connect_error);
     }
 
-    $sql = "UPDATE Videos SET title='$title', description='$description'";
-    if (!empty($preview)) {
-        $sql .= ", preview='$preview'";
+    $sql = "UPDATE Stickers SET name='$name'";
+    if (!empty($photo)) {
+        $sql .= ", photo='$photo'";
     }
     $sql .= " WHERE id='$id'";
 
     if ($conn->query($sql) === TRUE) {
-        echo json_encode(["message" => "Видео успешно отредактировано"]);
+        echo json_encode(["message" => "Стикер успешно отредактирован"]);
     } else {
-        echo json_encode(["error" => "Ошибка при редактировании видео: " . $conn->error]);
+        echo json_encode(["error" => "Ошибка при редактировании стикера: " . $conn->error]);
     }
 
     $conn->close();
-
 } else {
     echo json_encode(["error" => "Метод не разрешен"]);
 }
